@@ -11,18 +11,18 @@ module alu(A, B, ALUOp, C, Zero);
        
    always @( * ) begin
       case ( ALUOp )
-        `ALUOp_lui:C=B;
-        `ALUOp_add:C=A+B;
-        `ALUOp_sub:C=A-B;  //and beq
-        `ALUOp_xor:C=A^B;
-        `ALUOp_or:C=A|B;
-        `ALUOp_and:C=A&B;
-        `ALUOp_sll:C=A<<B;
-        `ALUOp_srl:C=A>>B;
-        `ALUOp_sra:C=A>>>B;
-        default: C=A;
+      `ALUOp_lui:C=B;
+      `ALUOp_add:C=A+B;
+      `ALUOp_sub:C=A-B;  //and beq
+      `ALUOp_xor:C=A^B;
+      `ALUOp_or:C=A|B;
+      `ALUOp_and:C=A&B;
+      `ALUOp_sll:C=A<<B;
+      `ALUOp_srl:C=A>>B;
+      `ALUOp_sra:C=A>>>B;
+      default: C=A;
       endcase
-   end 
+   end // end always
    
    assign Zero = (C == 32'b0);  
 

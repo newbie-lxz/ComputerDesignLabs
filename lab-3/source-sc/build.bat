@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-rem Lab-2 CPU simulation script for Windows.
-rem source is the run directory. Run this script in plcpu_sim\source.
+rem Lab-3 single-cycle CPU simulation script for Windows.
+rem Run this script in lab-3\source-sc.
 rem Usage:
 rem   build.bat        Build and run simulation
 rem   build.bat build  Build only
@@ -12,9 +12,14 @@ rem   build.bat clean  Remove generated simulation files
 
 cd /d "%~dp0"
 
-set "TOP=plcomp_tb"
-set "OUT=plcpu_sim.out"
-set "VCD=plcpu_sim.vcd"
+set "OSS_CAD_ROOT=D:\oss-cad-suite\oss-cad-suite"
+if exist "%OSS_CAD_ROOT%\bin\iverilog.exe" (
+    set "PATH=%OSS_CAD_ROOT%\bin;%OSS_CAD_ROOT%\lib;%PATH%"
+)
+
+set "TOP=sccomp_tb"
+set "OUT=sccpu_sim.out"
+set "VCD=sccpu_sim.vcd"
 set "ACTION=%~1"
 
 if "%ACTION%"=="" set "ACTION=run"
@@ -61,10 +66,9 @@ iverilog -I . -s %TOP% -o %OUT% ^
     im.v ^
     NPC.v ^
     PC.v ^
-    plcomp.v ^
-    plcomp_tb.v ^
-    PLCPU.v ^
-    pl_reg.v ^
+    sccomp.v ^
+    sccomp_tb.v ^
+    SCCPU.v ^
     RF.v
 
 if errorlevel 1 (

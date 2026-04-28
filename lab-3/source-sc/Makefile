@@ -1,16 +1,15 @@
-# Lab-2 流水线 CPU 仿真 Makefile
-# source 是运行目录，请在本目录执行 make 命令。
+# Lab-3 single-cycle CPU simulation Makefile
+# source-sc is the run directory. Run make in this directory.
 
 IVERILOG ?= iverilog
 VVP      ?= vvp
 GTKWAVE  ?= gtkwave
 
-TOP      := plcomp_tb
-OUT      := plcpu_sim.out
-VCD      := plcpu_sim.vcd
+TOP      := sccomp_tb
+OUT      := sccpu_sim.out
+VCD      := sccpu_sim.vcd
 
 # ctrl_encode_def.v is included by the source files through `include`.
-# Backup testbenches are not compiled to avoid duplicate module definitions.
 SRCS := \
 	alu.v \
 	ctrl.v \
@@ -19,10 +18,9 @@ SRCS := \
 	im.v \
 	NPC.v \
 	PC.v \
-	plcomp.v \
-	plcomp_tb.v \
-	PLCPU.v \
-	pl_reg.v \
+	sccomp.v \
+	sccomp_tb.v \
+	SCCPU.v \
 	RF.v
 
 IVERILOG_FLAGS := -I . -s $(TOP)
@@ -47,7 +45,7 @@ clean:
 	rm -f $(OUT) $(VCD) *.log
 
 help:
-	@echo "Lab-2 流水线 CPU simulation"
+	@echo "Lab-3 single-cycle CPU simulation"
 	@echo ""
 	@echo "Targets:"
 	@echo "  make build  Compile Verilog sources to $(OUT)"

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Lab-2 流水线 CPU simulation helper."""
+"""Lab-3 single-cycle CPU simulation helper."""
 
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -11,9 +12,12 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-TOP = "plcomp_tb"
-OUT = ROOT / "plcpu_sim.out"
-VCD = ROOT / "plcpu_sim.vcd"
+OSS_CAD_ROOT = Path(r"D:\oss-cad-suite\oss-cad-suite")
+OSS_CAD_BIN = OSS_CAD_ROOT / "bin"
+OSS_CAD_LIB = OSS_CAD_ROOT / "lib"
+TOP = "sccomp_tb"
+OUT = ROOT / "sccpu_sim.out"
+VCD = ROOT / "sccpu_sim.vcd"
 
 SRCS = [
     "alu.v",
@@ -23,10 +27,9 @@ SRCS = [
     "im.v",
     "NPC.v",
     "PC.v",
-    "plcomp.v",
-    "plcomp_tb.v",
-    "PLCPU.v",
-    "pl_reg.v",
+    "sccomp.v",
+    "sccomp_tb.v",
+    "SCCPU.v",
     "RF.v",
 ]
 
@@ -34,13 +37,20 @@ SRCS = [
 def require_tool(name: str) -> str:
     path = shutil.which(name)
     if path is None:
+        candidate = OSS_CAD_BIN / f"{name}.exe"
+        if candidate.exists():
+            return str(candidate)
+    if path is None:
         raise RuntimeError(f"Cannot find {name}. Please install it or add it to PATH.")
     return path
 
 
 def run_command(cmd: list[str]) -> None:
     print("[CMD]", " ".join(cmd))
-    subprocess.run(cmd, cwd=ROOT, check=True)
+    env = dict(os.environ)
+    if OSS_CAD_BIN.exists():
+        env["PATH"] = f"{OSS_CAD_BIN};{OSS_CAD_LIB};" + env.get("PATH", "")
+    subprocess.run(cmd, cwd=ROOT, check=True, env=env)
 
 
 def build() -> None:
@@ -70,7 +80,7 @@ def simulate() -> None:
 def open_wave() -> None:
     gtkwave = shutil.which("gtkwave")
     if gtkwave is None:
-        raise RuntimeError("Cannot find gtkwave. Please add GTKWave to PATH or open plcpu_sim.vcd manually.")
+        raise RuntimeError("Cannot find gtkwave. Please add GTKWave to PATH or open sccpu_sim.vcd manually.")
     if not VCD.exists():
         raise RuntimeError(f"Cannot find {VCD.name}. Please run build.py run first.")
     subprocess.Popen([gtkwave, VCD.name], cwd=ROOT)
@@ -95,7 +105,7 @@ def clean() -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Lab-2 流水线 CPU simulation helper")
+    parser = argparse.ArgumentParser(description="Lab-3 single-cycle CPU simulation helper")
     parser.add_argument(
         "target",
         nargs="?",

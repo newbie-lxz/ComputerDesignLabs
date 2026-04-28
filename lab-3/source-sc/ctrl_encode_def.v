@@ -1,12 +1,10 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 
 // NPC control signal
-`define NPC_PLUS4   5'b00000
-`define NPC_BRANCH  5'b00001
-`define NPC_JUMP    5'b00010
-`define NPC_JALR 5'b00100
-`define NPC_SEPC 5'b01000
-`define NPC_SEPC_PLUS4 5'b10000
+`define NPC_PLUS4   3'b000
+`define NPC_BRANCH  3'b001
+`define NPC_JUMP    3'b010
+`define NPC_JALR    3'b100
 
 // ALU control signal
 `define ALU_NOP   3'b000 
@@ -22,6 +20,10 @@
 `define EXT_CTRL_BTYPE	6'b000100
 `define EXT_CTRL_UTYPE	6'b000010
 `define EXT_CTRL_JTYPE	6'b000001
+
+`define GPRSel_RD 2'b00
+`define GPRSel_RT 2'b01
+`define GPRSel_31 2'b10
 
 `define WDSel_FromALU 2'b00
 `define WDSel_FromMEM 2'b01

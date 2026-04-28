@@ -1,9 +1,8 @@
-// data memory
 `include "ctrl_encode_def.v"
-module dm(clk, DMWr, DMRe, addr, din, dout);
+// data memory
+module dm(clk, DMWr, addr, din, dout);
    input          clk;
    input          DMWr;
-   input          DMRe;
    input  [31:0]  addr;
    input  [31:0]  din;
    output reg [31:0]  dout;
@@ -12,14 +11,13 @@ module dm(clk, DMWr, DMRe, addr, din, dout);
    
    always @(posedge clk)
       if (DMWr) begin
-          dmem[addr[8:2]] <= din;
-          $write(" memaddr = %h, memdata = %h \n", addr[31:0], din);
+         dmem[addr[8:2]] <= din;
+         $write(" memaddr = %h, memdata = %h", addr[31:0], din);
       end
    
-   //load
-   always @(*)
-      if (DMRe) begin
+     //load
+     always @(*) begin
          dout <= dmem[addr[8:2]];
-      end
-   
+     end
+     
 endmodule    
