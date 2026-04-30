@@ -48,7 +48,6 @@ Lab-2 单周期单核 CPU 与流水线 CPU 仿真工程运行与波形观察。
 lab-2/
 ├── README.md
 ├── modelsim_guide.md
-├── source-pl/
 └── source-sc/
 ```
 
