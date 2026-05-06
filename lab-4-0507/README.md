@@ -1,8 +1,8 @@
-# Lab-4: 流水线 CPU 新增两条指令
+# Lab-4-0507: 流水线 CPU 新增两条指令
 
 ## 实验目标
 
-本次 `lab-4` 严格按照老师要求完成：
+本次 `lab-4-0507` 严格按照老师要求完成：
 
 - 给流水线 CPU 增加一条跳转指令：`jal`
 - 给流水线 CPU 增加一条普通运算指令：`andi`
@@ -12,7 +12,7 @@
 ## 目录结构
 
 ```text
-lab-4/
+lab-4-0507/
 ├─ README.md
 └─ source-pl/
 ```
@@ -23,7 +23,7 @@ lab-4/
 
 建议按下面顺序完成实验：
 
-1. 先跑通当前 `lab-4/source-pl`，确认环境没有问题。
+1. 先跑通当前 `lab-4-0507/source-pl`，确认环境没有问题。
 2. 阅读测试程序，明确这次要验证的两条指令分别是什么。
 3. 阅读控制器 `ctrl.v`，理解新增指令需要哪些控制信号。
 4. 阅读 `EXT.v` 和 `NPC.v`，理解 `jal` 的立即数扩展和跳转地址生成。
@@ -65,25 +65,25 @@ lab-4/
 
 ## 本次实验实际改动了哪些文件
 
-位于 [source-pl](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl)：
+位于 [source-pl](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl)：
 
-- [ctrl.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\ctrl.v)
+- [ctrl.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\ctrl.v)
   增加 `andi`、`jal` 的译码和控制信号。
-- [EXT.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\EXT.v)
+- [EXT.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\EXT.v)
   增加 `jal` 所需的 J-type 立即数扩展。
-- [NPC.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\NPC.v)
+- [NPC.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\NPC.v)
   增加 `jal` 跳转目标地址生成。
-- [PLCPU.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\PLCPU.v)
+- [PLCPU.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\PLCPU.v)
   增加跳转后的两级流水清空逻辑。
-- [rv32_pl_sim.dat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\rv32_pl_sim.dat)
+- [rv32_pl_sim.dat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\rv32_pl_sim.dat)
   改为本次实验专用测试程序。
-- [plcomp_tb.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\plcomp_tb.v)
+- [plcomp_tb.v](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\plcomp_tb.v)
   增加 `PASS/FAIL` 自动检查和波形导出。
-- [Makefile](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\Makefile)
+- [Makefile](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\Makefile)
   Linux / WSL 运行入口。
-- [build.bat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\build.bat)
+- [build.bat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\build.bat)
   Windows 运行入口。
-- [build.py](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\build.py)
+- [build.py](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\build.py)
   Windows Python 运行入口。
 
 ## 学生实验步骤
@@ -91,7 +91,7 @@ lab-4/
 ### 第一步：进入目录
 
 ```powershell
-cd lab-4/source-pl
+cd lab-4-0507/source-pl
 ```
 
 ### 第二步：运行仿真
@@ -147,7 +147,7 @@ make wave
 
 ## 本次测试程序在验证什么
 
-[rv32_pl_sim.dat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4\source-pl\rv32_pl_sim.dat) 当前验证了下面几件事：
+[rv32_pl_sim.dat](E:\gogogo\work\ComputerDesignLabs_repo\lab-4-0507\source-pl\rv32_pl_sim.dat) 当前验证了下面几件事：
 
 - `addi x1, x0, 5`
   先准备一个后续 `andi` 要使用的源操作数。

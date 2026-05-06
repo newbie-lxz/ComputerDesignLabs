@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-rem Lab-4 pipeline CPU simulation script for Windows.
-rem Run this script in lab-4\source-pl.
+rem Lab-4-0507 pipeline CPU simulation script for Windows.
+rem Run this script in lab-4-0507\source-pl.
 rem Usage:
 rem   build.bat        Build and run simulation
 rem   build.bat build  Build only

@@ -1,6 +1,6 @@
-# Lab-4 source-pl 使用说明
+# Lab-4-0507 source-pl 使用说明
 
-本目录是 `lab-4` 的独立运行目录，用来验证流水线 CPU 新增的两条指令：
+本目录是 `lab-4-0507` 的独立运行目录，用来验证流水线 CPU 新增的两条指令：
 
 - `andi`
 - `jal`
@@ -184,7 +184,7 @@ make clean
 说明运行目录不对。请先进入本目录，再执行：
 
 ```powershell
-cd lab-4/source-pl
+cd lab-4-0507/source-pl
 ```
 
 ## 一句话总结
