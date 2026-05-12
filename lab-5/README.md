@@ -1,86 +1,217 @@
-# Lab-5: Vivado board number display demo
+# Lab-5: Vivado 开发板读数字亮数字 Demo
 
-## Goal
+## 实验目标
 
-This lab builds a minimal Vivado project for the Nexys4 DDR style board used by the course. The demo reads the 16 slide switches and displays the value in two ways:
+本次实验做一个最小 Vivado 开发板工程，用来验证开发板输入和显示输出是否能正常工作。
 
-- `led_o[15:0]` mirrors `sw_i[15:0]`.
-- The 8-digit seven-segment display shows `{16'h0000, sw_i}` as hexadecimal.
+功能要求：
 
-This is intentionally a small board bring-up demo. It is independent from the CPU labs.
+- 读取 16 个拨码开关 `sw_i[15:0]`。
+- 16 个 LED `led_o[15:0]` 直接显示拨码开关状态。
+- 8 位七段数码管显示 `{16'h0000, sw_i}` 的十六进制值。
 
-## Directory
+例子：
+
+- 拨码开关输入 `16'h1234`
+- LED 显示同样的 16 位二进制状态
+- 数码管显示 `00001234`
+
+本实验不是 CPU 实验，不需要运行单周期 CPU 或流水线 CPU。
+
+## 目录说明
 
 ```text
 lab-5/
-├─ README.md
-├─ Makefile
-├─ build.bat
-├─ constraints/
-│  └─ Nexys4DDR_NumberDemo.xdc
-├─ scripts/
-│  └─ create_vivado_project.tcl
-├─ sim/
-│  └─ tb_board_number_demo.v
-└─ src/
-   ├─ board_number_demo.v
-   ├─ hex_to_7seg.v
-   └─ scan_7seg.v
+|-- README.md
+|-- Makefile
+|-- build.bat
+|-- constraints/
+|   `-- Nexys4DDR_NumberDemo.xdc
+|-- scripts/
+|   `-- create_vivado_project.tcl
+|-- sim/
+|   `-- tb_board_number_demo.v
+`-- src/
+    |-- board_number_demo.v
+    |-- hex_to_7seg.v
+    `-- scan_7seg.v
 ```
 
-## How to run simulation
+主要文件：
 
-Linux / WSL:
+- `src/board_number_demo.v`
+  顶层模块，连接拨码开关、LED 和七段数码管。
+- `src/scan_7seg.v`
+  七段数码管动态扫描模块。
+- `src/hex_to_7seg.v`
+  4 位十六进制数到七段管段码的译码模块。
+- `constraints/Nexys4DDR_NumberDemo.xdc`
+  Nexys4 DDR 开发板引脚约束。
+- `scripts/create_vivado_project.tcl`
+  自动创建 Vivado 工程的脚本。
+- `sim/tb_board_number_demo.v`
+  用 `iverilog` 自动验证功能正确性的 testbench。
 
-```bash
-make sim
+## 第一部分：先用仿真验证代码正确
+
+这一步不需要 Vivado，只需要 `iverilog` 和 `vvp`。
+
+### Windows 运行方法
+
+进入目录：
+
+```powershell
+cd lab-5
 ```
 
-Windows:
+运行自动验证：
 
 ```powershell
 .\build.bat sim
 ```
 
-Expected result:
+如果环境正确，应看到：
 
 ```text
 [PASS] lab-5 board number demo checks passed.
 ```
 
-## How to create the Vivado project
+这说明：
 
-Run this on a machine with Vivado installed:
+- LED 会跟随拨码开关变化。
+- 七段数码管能正确显示十六进制数字。
+- `16'h1234`、`16'hABCD` 这类输入已经被自动测试过。
+
+### Linux / WSL 运行方法
+
+进入目录：
 
 ```bash
-vivado -mode batch -source scripts/create_vivado_project.tcl
+cd lab-5
 ```
 
-The generated project is placed under:
+运行：
+
+```bash
+make sim
+```
+
+通过标准同样是：
+
+```text
+[PASS] lab-5 board number demo checks passed.
+```
+
+## 第二部分：创建 Vivado 工程
+
+这一步需要电脑已经安装 Vivado。
+
+在 `lab-5` 目录下执行：
+
+```powershell
+.\build.bat vivado
+```
+
+或者直接执行：
+
+```powershell
+vivado -mode batch -source scripts\create_vivado_project.tcl
+```
+
+脚本会生成 Vivado 工程：
 
 ```text
 lab-5/vivado/number_demo/
 ```
 
-Generated Vivado files are not committed. Recreate them with the TCL script when needed.
+打开工程文件：
 
-## Board operation
+```text
+lab-5/vivado/number_demo/number_demo.xpr
+```
 
-1. Open the generated Vivado project.
-2. Synthesize, implement, and generate bitstream.
-3. Program the board.
-4. Change `sw_i[15:0]`.
-5. Check that LEDs mirror the switches.
-6. Check that the seven-segment display shows the same 16-bit value as hex on the lower 4 digits.
+## 第三部分：在 Vivado 中生成 bitstream
 
-Example:
+打开 `number_demo.xpr` 后按下面步骤操作：
 
-- `sw_i = 16'h1234`
-- LEDs show `0001_0010_0011_0100`
-- Seven-segment display shows `00001234`
+1. 确认顶层模块是 `board_number_demo`。
+2. 点击 `Run Synthesis`。
+3. 综合完成后点击 `Run Implementation`。
+4. 实现完成后点击 `Generate Bitstream`。
+5. 连接开发板。
+6. 打开 Hardware Manager。
+7. Program Device，选择生成的 `.bit` 文件。
 
-## Notes
+如果综合或实现报错，优先检查：
 
-- `rstn` is active-low.
-- Seven-segment outputs are active-low, matching the existing course constraint style.
-- `sw_i[15]` is only a normal data switch in this lab. It is not used as a CPU clock selector.
+- 约束文件是否被加入工程。
+- 顶层端口名是否是 `clk`、`rstn`、`sw_i`、`led_o`、`disp_seg_o`、`disp_an_o`。
+- 开发板型号是否匹配 Nexys4 DDR / Artix-7 `xc7a100tcsg324-1`。
+
+## 第四部分：上板后怎么验证
+
+烧录完成后，直接拨动开发板上的 16 个开关。
+
+检查点：
+
+1. LED 是否和拨码开关一一对应。
+2. 数码管低 4 位是否显示拨码开关组成的十六进制数。
+3. 数码管高 4 位是否显示 `0000`。
+
+例子：
+
+- `sw_i = 16'h0001`，数码管显示 `00000001`。
+- `sw_i = 16'h00AF`，数码管显示 `000000AF`。
+- `sw_i = 16'h1234`，数码管显示 `00001234`。
+
+## 常见问题
+
+### 1. 运行 `.\build.bat sim` 提示找不到 `iverilog`
+
+说明当前电脑没有把 `iverilog` 加入 PATH。
+
+如果你安装的是 OSS CAD Suite，可以检查路径是否类似：
+
+```text
+D:\oss-cad-suite\oss-cad-suite
+```
+
+当前脚本会自动尝试这个路径。如果你的安装路径不同，需要手动把 `iverilog.exe` 和 `vvp.exe` 所在目录加入 PATH。
+
+### 2. 运行 `.\build.bat vivado` 提示找不到 `vivado`
+
+说明当前终端没有 Vivado 命令。
+
+处理方法：
+
+- 从 Vivado 自带的命令行启动。
+- 或者把 Vivado 的 `bin` 目录加入 PATH。
+- 也可以直接打开 Vivado GUI，再用 Tcl Console 执行 `scripts/create_vivado_project.tcl`。
+
+### 3. 数码管显示方向看起来反了
+
+本实验按常见 Nexys4 DDR 七段管连接方式扫描：
+
+- `disp_an_o[0]` 显示最低 4 位。
+- `disp_an_o[7]` 显示最高 4 位。
+
+如果板子型号或约束不同，显示方向可能需要按实际硬件调整。
+
+### 4. 为什么 Vivado 工程目录没有提交到仓库
+
+`lab-5/vivado/` 是生成目录，文件多且容易包含本机路径。仓库只提交源码、约束和创建脚本。
+
+需要 Vivado 工程时，重新运行：
+
+```powershell
+.\build.bat vivado
+```
+
+## 提交验收建议
+
+实验报告建议包含：
+
+1. `.\build.bat sim` 通过截图。
+2. Vivado 综合、实现、生成 bitstream 成功截图。
+3. 上板后拨码开关和 LED 对应截图。
+4. 上板后数码管显示输入数字的截图。
