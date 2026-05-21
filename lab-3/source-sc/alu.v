@@ -5,7 +5,8 @@ module alu(A, B, ALUOp, C, Zero);
    input         [4:0]  ALUOp;
    output signed [31:0] C;
    output Zero;  //condition flag: set if condition is true for B-type instruction
-   
+   output Sign;
+
    reg [31:0] C;
    integer    i;
        
@@ -26,5 +27,6 @@ module alu(A, B, ALUOp, C, Zero);
    
    assign Zero = (C == 32'b0);  
 
+   assign Sign = C[31];
 endmodule
     

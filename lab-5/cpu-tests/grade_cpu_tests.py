@@ -106,8 +106,11 @@ def normalize_word(value: str) -> int:
 def grade_test(test: dict, target: dict, executable: Path) -> tuple[int, int]:
     vvp = tool_path("vvp")
     program = (ROOT / test["program"]).resolve()
+    sim_program = BUILD_DIR / f"{test['name']}.dat"
+    shutil.copyfile(program, sim_program)
+    sim_program_arg = f"build/{sim_program.name}"
     cycles = int(test.get("cycles", target.get("cycles", 100)))
-    proc = run([vvp, str(executable), f"+IMEM={program.as_posix()}", f"+CYCLES={cycles}"], ROOT)
+    proc = run([vvp, str(executable), f"+IMEM={sim_program_arg}", f"+CYCLES={cycles}"], ROOT)
     if proc.returncode != 0:
         print(proc.stdout)
         print(f"[FAIL] {test['name']}: simulation returned {proc.returncode}")

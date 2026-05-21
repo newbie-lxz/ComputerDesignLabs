@@ -8,6 +8,11 @@ if exist "%OSS_CAD_ROOT%\bin\iverilog.exe" (
     set "PATH=%OSS_CAD_ROOT%\bin;%OSS_CAD_ROOT%\lib;%PATH%"
 )
 
+set "LOCAL_VIVADO_BIN=D:\vivado\Vivado\2017.4\bin"
+if exist "%LOCAL_VIVADO_BIN%\vivado.bat" (
+    set "PATH=%LOCAL_VIVADO_BIN%;%PATH%"
+)
+
 set "ACTION=%~1"
 if "%ACTION%"=="" set "ACTION=sim"
 
