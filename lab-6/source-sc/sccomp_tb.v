@@ -33,14 +33,14 @@ module sccomp_tb();
     $dumpfile("sccpu_sid_sort.vcd");
     $dumpvars(0, sccomp_tb);
 
-    #5000;
+    #10000;
 
-    if (sccomp.U_DM.dmem[96] !== 32'h5487_3530) begin
-      $display("[FAIL] mem[0x180] expected original sid 0x54873530, got %h", sccomp.U_DM.dmem[96]);
+    if (sccomp.U_DM.dmem[96] !== 32'h1357_2468) begin
+      $display("[FAIL] mem[0x180] expected original sid 0x13572468, got %h", sccomp.U_DM.dmem[96]);
       errors = errors + 1;
     end
-    if (sccomp.U_DM.dmem[97] !== 32'h0334_5578) begin
-      $display("[FAIL] mem[0x184] expected sorted sid 0x03345578, got %h", sccomp.U_DM.dmem[97]);
+    if (sccomp.U_DM.dmem[97] !== 32'h1234_5678) begin
+      $display("[FAIL] mem[0x184] expected sorted sid 0x12345678, got %h", sccomp.U_DM.dmem[97]);
       errors = errors + 1;
     end
     if (sccomp.U_SCCPU.U_RF.rf[1] !== 32'hffff_0004) begin

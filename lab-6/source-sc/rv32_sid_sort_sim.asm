@@ -76,13 +76,13 @@
 # U: lui
 
 ##########################################################################################
-      addi    x2, x0, 0x54        # This is the BCD encoding for the studnet id: a hex digit for each decimal digit
+      addi    x2, x0, 0x13        # This is the BCD encoding for the studnet id: a hex digit for each decimal digit
       slli    x2, x2, 8
-      addi    x2, x2, 0x87
+      addi    x2, x2, 0x57
       slli    x2, x2, 16
-      addi    x3, x0, 0x35
+      addi    x3, x0, 0x24
       slli    x3, x3, 8
-      addi    x3, x3, 0x30
+      addi    x3, x3, 0x68
       add     x2, x2, x3          # set the student id, USE YOUR OWN STUDENT NO.!!!
       sw      x2, 0x180(x0)       # store the original sid at data memory
       addi    x11, x0, 8          # the size of sid, N = 8
@@ -130,7 +130,7 @@ result:
       ori     x2, x2, 0x00c       # x2 = 0xffff000c
       addi    x5, x0, 0x300       # x5 = 0x00000300
       andi    x5, x5, 0x100       # x5 = 0x00000100
-end:  jal     x0, result          # jump to result, dead loop
+end:  jal     x0, end          # jump to result, dead loop
 ############
 # the above code: a deadloop
 # at the label end, the values in memory and registers should be:
