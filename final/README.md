@@ -1,87 +1,96 @@
-# Final：扩展指令验收与评分说明
+﻿# Final 目录说明
 
-## 目标
+本目录用于保存本次计算机设计 Final 验收相关材料，包括验收报告、报告图片、最终测试用例、原理问题说明，以及本次实验使用的源码归档。
 
-最终验收要求学生在现有单周期 CPU 和流水线 CPU demo 的基础上扩展指令，并用 `iverilog` 测试点进行自动验收。
-
-本目录提供两部分内容：
-
-- `QUESTIONS.md`：面向学生的原理理解问题，数量超过 10 个。
-- `iverilog-tests/`：可复用的 `iverilog` 评分 testbench 模板。
-- 本 README：说明最终验收的指令范围、测试设计要求和评分建议。
-
-## 单周期 CPU 需要实现的指令
+## 目录结构
 
 ```text
-slt, sltu,
-andi, ori, xori,
-srli, srai, slli,
-slti, sltiu,
-bne, bge, bgeu, blt, bltu,
-jalr
+final/
+├── README.md
+├── QUESTIONS.md
+├── report.md
+├── report-assets/
+├── iverilog-tests/
+└── final_experiment/
 ```
 
-说明：老师原文中的 `sltui` 按 RISC-V 标准应理解为 `sltiu`。
+## 文件和子目录说明
 
-## 流水线 CPU 需要实现的指令
+### `report.md`
+
+最终实验报告。报告中包含以下内容：
+
+- 前四个验收测试用例的运行结果截图。
+- FPGA 开发板运行结果照片。
+- 新增指令说明。
+- `add` 运算指令的执行过程分析。
+- `beq` 分支指令的执行过程分析。
+- 单周期 CPU 和流水线 CPU 的区别。
+- 流水线段寄存器、数据冲突、stall、flush 等实现说明。
+- Verilog diff 报告截图。
+
+报告中的图片均使用相对路径引用 `report-assets/`，因此上传到 GitHub 后应与 `report-assets/` 一起保留。
+
+### `report-assets/`
+
+实验报告使用的所有图片资源，主要包括：
+
+- 单周期 CPU 运行 `Test_30_Instr.dat` 的结果截图。
+- 流水线 CPU 运行 `Test_30_Instr.dat` 的结果截图。
+- 单周期 CPU 运行学号排序程序的结果截图。
+- 流水线 CPU 运行学号排序程序的结果截图。
+- Vivado bitstream 生成成功截图。
+- 开发板显示原始学号和排序后学号的照片。
+- `add`、`beq`、流水线段寄存器、冲突处理等代码截图。
+- diff 修改文件统计截图。
+
+修改或移动报告时，不要删除该目录，否则 `report.md` 中的图片会失效。
+
+### `QUESTIONS.md`
+
+Final 原理理解问题集合。内容覆盖：
+
+- 运算指令执行过程。
+- 分支和跳转指令执行过程。
+- 单周期 CPU 与流水线 CPU 的区别。
+- 流水线段寄存器、数据冒险、控制冒险、flush/stall 等问题。
+
+报告第 5、6 章中的问题回答可用于应对这些验收提问。
+
+### `iverilog-tests/`
+
+Final 验收用的 `iverilog` 测试目录。
 
 ```text
-slt, sltu,
-andi, ori, xori,
-srli, srai, slli,
-slti, sltiu,
-beq, bne, bge, bgeu, blt, bltu,
-jal, jalr
+iverilog-tests/
+├── README.md
+├── tb/
+│   ├── sc_final_tb.v
+│   └── pl_final_tb.v
+└── tests/
+    ├── expected_results.json
+    ├── sc/
+    └── pl/
 ```
 
-## 按点给分测试要求
+其中：
 
-最终测试不应该只用一个大程序判断是否通过，而应该拆成很多小测试点。每个测试点只验证一个或一组高度相关的行为，这样学生能定位错误。
+- `tb/sc_final_tb.v`：单周期 CPU 的 final 测试 testbench。
+- `tb/pl_final_tb.v`：流水线 CPU 的 final 测试 testbench。
+- `tests/sc/`：单周期 CPU 指令测试机器码。
+- `tests/pl/`：流水线 CPU 指令测试机器码。
+- `expected_results.json`：部分测试期望结果说明。
 
-建议每条指令至少覆盖以下情况：
+常用测试命令见 `iverilog-tests/README.md`，或参考 `report.md` 第 2 章中的命令记录。
 
-- `slt`、`sltu`：正数、负数、零、相等、不相等、有符号和无符号差异。
-- `andi`、`ori`、`xori`：不同立即数、全 0、全 1、交错 bit、符号扩展立即数。
-- `srli`、`srai`、`slli`：移位 0、移位 1、移位多位、正数、负数。
-- `slti`、`sltiu`：正数、负数、零、相等、不相等、有符号和无符号差异。
-- `beq`、`bne`、`bge`、`bgeu`、`blt`、`bltu`：跳转成立和不成立都要测。
-- `jal`、`jalr`：检查跳转目标、link 寄存器写回值、被跳过指令是否没有生效。
+### `final_experiment/`
 
-## 推荐评分方式
+本次验收所用实验工程归档。该目录保存了最终使用的单周期 CPU、流水线 CPU 和 Vivado 上板工程，便于验收、复现和代码追踪。
 
-每个测试点可以包含多个检查项：
-
-- 寄存器检查：例如 `x5 == 0x00000001`。
-- 内存检查：例如 `mem[4] == 0x12345678`。
-- 跳转检查：通过被跳过指令对应的寄存器是否保持 0 判断。
-- 流水线额外检查：通过连续相关指令判断转发、阻塞和冲刷是否正确。
-
-总分建议直接按检查项累计，例如：
+详见：
 
 ```text
-[PASS] sc_slt_signed: 5/5
-[PASS] sc_branch_bge: 4/4
-[FAIL] pl_jalr_flush: 3/5
-Score: 92/100
+final/final_experiment/README.md
 ```
 
-## 学生提交建议
 
-学生最终应提交：
-
-1. 单周期 CPU 修改后的源码。
-2. 流水线 CPU 修改后的源码。
-3. `iverilog` 测试截图或评分脚本输出。
-4. 对 `QUESTIONS.md` 中问题的回答。
-5. 如果做了上板展示，补充开发板照片或视频截图。
-
-## 与 lab-6 的关系
-
-`lab-6` 已经给出单周期 CPU 跑学号排序的参考实现。最终验收时，学生可以参考 lab-6 中的这些实现：
-
-- `slt` 如何作为比较指令写回 0/1。
-- `slli`、`srl` 如何使用低 5 位作为移位量。
-- `bne` 如何复用 ALU 比较结果决定是否跳转。
-- `jalr` 如何返回 `swap` 子过程。
-
-流水线 CPU 不能只照搬单周期逻辑，还需要考虑冒险处理和流水线冲刷。
